@@ -1,36 +1,39 @@
 import React from 'react'
-import { useProduct } from 'vtex.product-context'
 import { useOrderForm } from 'vtex.order-manager/OrderForm'
 import { generateBlockClass } from '@vtex/css-handles'
 import styles from './styles.css'
-/* import ProductGroup from './ProductGroup' */
+
 
 const AddToCartInfo = ({blockClass}: {blockClass: string}) => {
-  const containerClasses = generateBlockClass(styles.container, blockClass)
-  const productInfo = useProduct()
+  const container = generateBlockClass(styles.container, blockClass)
+  const productGroup = generateBlockClass(styles.productGroup, blockClass)
+  const itemProduct = generateBlockClass(styles.itemProduct, blockClass)
+  const itemImageContainer = generateBlockClass(styles.itemImageContainer, blockClass)
+  const itemImage = generateBlockClass(styles.itemImage, blockClass)
+  const ordenSummary = generateBlockClass(styles.ordenSummary, blockClass)
   const { orderForm: { items, totalizers} } = useOrderForm()
-  console.log(productInfo)
-  console.log(items)
   return (
-    <div className={containerClasses}>
-      {items.map((item:any, index:number)=> {
-        return (
-          <div key={index}>
-            <div>
-              <img src={item.imageUrls.at1x} />
+    <div className={container}>
+      <div className={`${productGroup} flex `}>
+        {items.map((item:any, index:number)=> {
+          return (
+            <div className={`${itemProduct} w-100`} key={index}>
+              <div className={`${itemImageContainer} flex justify-center`}>
+                <img className={`${itemImage}`} src={item.imageUrls.at1x} />
+              </div>
+              <div>
+                <p className="tc white">{item.name}</p>
+                <p className="tc white">{item.id}</p>
+                <p className="tc white">${item.price / 100}</p>
+                <p className="tc white">Cant: {item.quantity}</p>
+              </div>
             </div>
-            <div>
-              <p>{item.name}</p>
-              <p>{item.id}</p>
-              <p>${item.price / 100}</p>
-              <p>Cant: {item.quantity}</p>
-            </div>
-          </div>
-        )
-        })}
-      <div>
-        <p>Tenemos {items.length} items en tu compra</p>
-        <p>Total: ${totalizers[0]? totalizers[0]?.value / 100 : "0"}</p>
+          )
+          })}
+      </div>
+      <div className={ordenSummary}>
+        <p className="tc white">Tenemos {items.length} items en tu compra</p>
+        <p className="tc white">Total: ${totalizers[0]? totalizers[0]?.value / 100 : "0"}</p>
       </div>
     </div>
   )
